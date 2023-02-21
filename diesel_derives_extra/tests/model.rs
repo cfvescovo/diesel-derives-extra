@@ -1,10 +1,5 @@
-#[macro_use]
-extern crate diesel;
-#[macro_use]
-extern crate diesel_derives_extra;
-extern crate diesel_derives_traits;
-#[cfg(feature = "logger")]
-extern crate diesel_logger;
+use diesel::{table, AsChangeset, Identifiable, Insertable, Queryable};
+use diesel_derives_extra::{Model, NewModel};
 
 #[test]
 fn simple_model() {
@@ -16,14 +11,14 @@ fn simple_model() {
     }
 
     #[derive(Debug, Queryable, Identifiable, AsChangeset, Model)]
-    #[table_name = "jobs"]
+    #[diesel(table_name = jobs)]
     struct Job {
         id: i32,
         payload: String,
     }
 
     #[derive(Debug, Insertable, NewModel)]
-    #[table_name = "jobs"]
+    #[diesel(table_name = jobs)]
     #[model(Job)]
     struct NewJob {
         payload: String,
@@ -40,14 +35,14 @@ fn with_lifetime() {
     }
 
     #[derive(Debug, Queryable, Identifiable, AsChangeset, Model)]
-    #[table_name = "jobs"]
+    #[diesel(table_name = jobs)]
     struct Job {
         id: i32,
         payload: String,
     }
 
     #[derive(Debug, Insertable, NewModel)]
-    #[table_name = "jobs"]
+    #[diesel(table_name = jobs)]
     #[model(Job)]
     struct NewJob<'a> {
         payload: &'a str,
@@ -64,14 +59,15 @@ fn new_without_model() {
     }
 
     #[derive(Debug, Queryable, Identifiable)]
-    #[table_name = "jobs"]
+    #[diesel(table_name = jobs)]
+    #[allow(dead_code)]
     struct Job {
         id: i32,
         payload: String,
     }
 
     #[derive(Debug, Insertable, NewModel)]
-    #[table_name = "jobs"]
+    #[diesel(table_name = jobs)]
     #[model(Job)]
     struct NewJob {
         payload: String,
